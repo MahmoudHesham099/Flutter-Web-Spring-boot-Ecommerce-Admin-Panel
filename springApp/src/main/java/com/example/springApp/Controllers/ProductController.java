@@ -5,12 +5,15 @@ import com.example.springApp.Entities.Product;
 import com.example.springApp.Services.ProductService;
 import com.example.springApp.Handlers.ResponseHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.websocket.server.PathParam;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/products")
@@ -20,12 +23,12 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping
-    public ResponseEntity<Object> getProducts(){
+    public ResponseEntity<Object> getProducts(@RequestParam int page){
         try {
-          List<Product> products = productService.getProductsList();
-          return ResponseHandler.handleResponse("Successfully get products", HttpStatus.OK,products);
+          Page<Product> productPage = productService.getProductsList(page);
+          return ResponseHandler.handleResponse("Successfully get products",HttpStatus.OK,productPage);
         }catch (Exception e){
-            return ResponseHandler.handleResponse("ERROR", HttpStatus.BAD_REQUEST,e.getMessage());
+            return ResponseHandler.handleResponse("ERROR",HttpStatus.BAD_REQUEST,e.getMessage());
         }
     }
 
@@ -64,29 +67,26 @@ public class ProductController {
     }
 
     @GetMapping("/find")
-    public ResponseEntity<Object> findProducts(@RequestParam String name){
+    public ResponseEntity<Object> findProducts(@RequestParam int page,@RequestParam String name){
         try {
-            List<Product> products = productService.findProductsByName(name);
+            Page<Product> products = productService.findProductsByName(name, page);
             return ResponseHandler.handleResponse("Successfully find products", HttpStatus.OK,products);
         }catch (Exception e){
             return ResponseHandler.handleResponse("ERROR", HttpStatus.BAD_REQUEST,e.getMessage());
         }
     }
 
-    @GetMapping("/sort/price/asc")
-    public ResponseEntity<Object> sortProductsByPriceAsc(){
+    @GetMapping("/sort/price")
+    public ResponseEntity<Object> sortProductsByPrice(@RequestParam int page,@RequestParam String type){
         try {
-            List<Product> products = productService.getProductsOrderByPriceAsc();
-            return ResponseHandler.handleResponse("Successfully sort products", HttpStatus.OK,products);
-        }catch (Exception e){
-            return ResponseHandler.handleResponse("ERROR", HttpStatus.BAD_REQUEST,e.getMessage());
-        }
-    }
-
-    @GetMapping("/sort/price/desc")
-    public ResponseEntity<Object> sortProductsByPriceDesc(){
-        try {
-            List<Product> products = productService.getProductsOrderByPriceDesc();
+            Page<Product> products;
+            if(Objects.equals(type, "asc")){
+                products = productService.getProductsOrderByPriceAsc(page);
+            }else if (Objects.equals(type, "desc")){
+                products = productService.getProductsOrderByPriceDesc(page);
+            }else{
+                return ResponseHandler.handleResponse("Wrong Type Parameter", HttpStatus.BAD_REQUEST,null);
+            }
             return ResponseHandler.handleResponse("Successfully sort products", HttpStatus.OK,products);
         }catch (Exception e){
             return ResponseHandler.handleResponse("ERROR", HttpStatus.BAD_REQUEST,e.getMessage());

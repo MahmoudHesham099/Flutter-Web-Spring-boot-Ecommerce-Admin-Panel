@@ -5,9 +5,10 @@ import com.example.springApp.Repositories.ProductRepository;
 import com.example.springApp.Services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @Primary
@@ -17,8 +18,9 @@ public class ProductServiceImp implements ProductService {
     private ProductRepository productRepository;
 
     @Override
-    public List<Product> getProductsList() {
-        return productRepository.findAll();
+    public Page<Product> getProductsList(int page) {
+        Pageable pageable = PageRequest.of(page, 3);
+        return productRepository.findAll(pageable);
     }
 
     @Override
@@ -41,17 +43,20 @@ public class ProductServiceImp implements ProductService {
     }
 
     @Override
-    public List<Product> findProductsByName(String name) {
-        return productRepository.findByNameContainingIgnoreCase(name);
+    public Page<Product> findProductsByName(String name, int page) {
+        Pageable pageable = PageRequest.of(page, 3);
+        return productRepository.findByNameContainingIgnoreCase(name, pageable);
     }
 
     @Override
-    public List<Product> getProductsOrderByPriceAsc() {
-        return productRepository.findAllByOrderByPriceAsc();
+    public Page<Product> getProductsOrderByPriceAsc(int page) {
+        Pageable pageable = PageRequest.of(page, 3);
+        return productRepository.findAllByOrderByPriceAsc(pageable);
     }
 
     @Override
-    public List<Product> getProductsOrderByPriceDesc() {
-        return productRepository.findAllByOrderByPriceDesc();
+    public Page<Product> getProductsOrderByPriceDesc(int page) {
+        Pageable pageable = PageRequest.of(page, 3);
+        return productRepository.findAllByOrderByPriceDesc(pageable);
     }
 }

@@ -1,12 +1,11 @@
 package com.example.springApp.Services;
 
 import com.example.springApp.Entities.Product;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
 
 public interface ProductService {
 
-    List<Product> getProductsList();
+    Page<Product> getProductsList(int page);
 
     Product addProduct(Product product);
 
@@ -14,11 +13,11 @@ public interface ProductService {
 
     void deleteProduct(Long id);
 
-    List<Product> findProductsByName(String name);
+    Page<Product> findProductsByName(String name, int page);
 
-    List<Product> getProductsOrderByPriceAsc();
+    Page<Product> getProductsOrderByPriceAsc(int page);
 
-    List<Product> getProductsOrderByPriceDesc();
+    Page<Product> getProductsOrderByPriceDesc(int page);
 
 
 }
