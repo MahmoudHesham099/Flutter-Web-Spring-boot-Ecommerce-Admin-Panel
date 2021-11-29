@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutterapp/Models/product.dart';
 
-class EventContainer extends StatelessWidget {
-  final Product event;
-  const EventContainer({Key? key, required this.event}) : super(key: key);
+class ProductContainer extends StatelessWidget {
+  final Product product;
+  const ProductContainer({Key? key, required this.product}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -14,15 +14,17 @@ class EventContainer extends StatelessWidget {
           height: 210,
           width: 300,
           child: ClipRRect(
-            child: Image.asset(
-              event.image,
+            child: Image.network(
+              product.image!,
               fit: BoxFit.cover,
+              cacheHeight: 300,
+              cacheWidth: 300,
             ),
           ),
         ),
         const SizedBox(height: 10),
         Text(
-          event.name,
+          product.name!,
           style: const TextStyle(
             color: Colors.black,
             fontSize: 15,
@@ -30,7 +32,7 @@ class EventContainer extends StatelessWidget {
           ),
         ),
         Text(
-          event.price.toString() + " \$",
+          product.price.toString() + " \$",
           style: const TextStyle(
             color: Colors.black,
           ),

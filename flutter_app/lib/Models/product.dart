@@ -1,25 +1,19 @@
-import 'package:flutter/material.dart';
-
 class Product {
-  int _id;
-  String _name;
-  String _description;
-  String _image;
-  double _price;
+  int? id;
+  String? name;
+  String? description;
+  String? image;
+  double? price;
 
   Product({
-    required id,
-    required name,
-    required description,
-    required image,
-    required price,
-  })  : _id = id,
-        _name = name,
-        _description = description,
-        _image = image,
-        _price = price;
+    required this.id,
+    required this.name,
+    required this.description,
+    required this.image,
+    required this.price,
+  });
 
-
+  Product.empty();
 
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
@@ -33,41 +27,11 @@ class Product {
 
   Map<String, dynamic> toJson(Product product) {
     return {
-      "id": product._id,
-      "name": product._name,
-      "description": product._description,
-      "image": product._image,
-      "price": product._price,
+      "id": product.id,
+      "name": product.name,
+      "description": product.description,
+      "image": product.image,
+      "price": product.price,
     };
-  }
-
-  double get price => _price;
-
-  String get image => _image;
-
-  String get description => _description;
-
-  String get name => _name;
-
-  int get id => _id;
-
-  set price(double value) {
-    _price = value;
-  }
-
-  set image(String value) {
-    _image = value;
-  }
-
-  set description(String value) {
-    _description = value;
-  }
-
-  set name(String value) {
-    _name = value;
-  }
-
-  set id(int value) {
-    _id = value;
   }
 }

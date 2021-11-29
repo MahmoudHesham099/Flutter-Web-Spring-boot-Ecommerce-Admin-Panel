@@ -3,29 +3,19 @@ import 'package:flutterapp/Models/product.dart';
 import 'package:flutterapp/Repositories/product_repository.dart';
 
 class ProductProvider extends ChangeNotifier {
-  List<Product> _products = [];
-  Product? _productToEdit;
+  List<Product> products = [];
+  Product? productToEdit;
   final ProductRepository _productRepository = ProductRepository();
+  static int page = 0;
 
   addProduct(Product product) async {
     Product savedProduct = await _productRepository.addProduct(product);
-    _products.add(savedProduct);
+    products.add(savedProduct);
   }
 
-  getAllProducts() {
-    return _products;
-  }
-
-  getProductToEdit() {
-    return _productToEdit;
-  }
-
-  setProducts(List<Product> events) {
-    _products = events;
-    notifyListeners();
-  }
-
-  setProductToEdit(Product? event) {
-    _productToEdit = event;
+  getProducts() async {
+    List<Product> pageProducts = await _productRepository.getProductsList(page);
+    products = products + pageProducts;
+    page++;
   }
 }

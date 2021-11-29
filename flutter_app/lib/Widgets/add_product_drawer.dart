@@ -13,7 +13,7 @@ class AddProductDrawer extends StatefulWidget {
 }
 
 class _AddProductDrawerState extends State<AddProductDrawer> {
-  late Product _newProduct;
+  late final Product _newProduct = Product.empty();
   Product? _editProduct;
 //  @override
 //  void initState() {

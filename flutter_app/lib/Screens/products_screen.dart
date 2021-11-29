@@ -16,6 +16,14 @@ class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration.zero, () {
+      context.read<ProductProvider>().getProducts();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
@@ -48,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     primary: const Color(0xff5b3bfe),
                   ),
                   onPressed: () {
-                    context.read<ProductProvider>().setProductToEdit(null);
+                    context.read<ProductProvider>().productToEdit = null;
                     _scaffoldKey.currentState!.openEndDrawer();
                   },
                   child: Row(
@@ -87,14 +95,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 desiredItemWidth: 200,
                 minSpacing: 20,
                 children: Provider.of<ProductProvider>(context)
-                    .getAllProducts()
-                    .map<Widget>((event) {
+                    .products
+                    .map<Widget>((product) {
                   return GestureDetector(
-                      onTap: () {
-                        context.read<ProductProvider>().setProductToEdit(event);
-                        _scaffoldKey.currentState!.openEndDrawer();
-                      },
-                      child: EventContainer(event: event));
+                    onTap: () {
+                      context.read<ProductProvider>().productToEdit = product;
+                      _scaffoldKey.currentState!.openEndDrawer();
+                    },
+                    child: ProductContainer(product: product),
+                  );
                 }).toList()),
           ),
         ],
