@@ -1,7 +1,9 @@
-package com.example.springApp.Product;
+package com.example.springApp.Controllers;
 
 
-import com.example.springApp.ResponseHandler;
+import com.example.springApp.Entities.Product;
+import com.example.springApp.Services.ProductService;
+import com.example.springApp.Handlers.ResponseHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -71,10 +73,20 @@ public class ProductController {
         }
     }
 
-    @GetMapping("/sort/price")
-    public ResponseEntity<Object> sortProductsByPrice(){
+    @GetMapping("/sort/price/asc")
+    public ResponseEntity<Object> sortProductsByPriceAsc(){
         try {
-            List<Product> products = productService.getProductsOrderByPrice();
+            List<Product> products = productService.getProductsOrderByPriceAsc();
+            return ResponseHandler.handleResponse("Successfully sort products", HttpStatus.OK,products);
+        }catch (Exception e){
+            return ResponseHandler.handleResponse("ERROR", HttpStatus.BAD_REQUEST,e.getMessage());
+        }
+    }
+
+    @GetMapping("/sort/price/desc")
+    public ResponseEntity<Object> sortProductsByPriceDesc(){
+        try {
+            List<Product> products = productService.getProductsOrderByPriceDesc();
             return ResponseHandler.handleResponse("Successfully sort products", HttpStatus.OK,products);
         }catch (Exception e){
             return ResponseHandler.handleResponse("ERROR", HttpStatus.BAD_REQUEST,e.getMessage());

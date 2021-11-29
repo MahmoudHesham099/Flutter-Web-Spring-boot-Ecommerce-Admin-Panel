@@ -1,4 +1,6 @@
-package com.example.springApp.Product;
+package com.example.springApp.Services;
+
+import com.example.springApp.Entities.Product;
 
 import java.util.List;
 
@@ -14,5 +16,9 @@ public interface ProductService {
 
     List<Product> findProductsByName(String name);
 
-    List<Product> getProductsOrderByPrice();
+    List<Product> getProductsOrderByPriceAsc();
+
+    List<Product> getProductsOrderByPriceDesc();
+
+
 }

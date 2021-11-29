@@ -1,8 +1,10 @@
-package com.example.springApp.Product;
+package com.example.springApp.Services.ServicesImp;
 
+import com.example.springApp.Entities.Product;
+import com.example.springApp.Repositories.ProductRepository;
+import com.example.springApp.Services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,12 +42,16 @@ public class ProductServiceImp implements ProductService {
 
     @Override
     public List<Product> findProductsByName(String name) {
-        List<Product> products = productRepository.findByNameContainingIgnoreCase(name);
-        return products;
+        return productRepository.findByNameContainingIgnoreCase(name);
     }
 
     @Override
-    public List<Product> getProductsOrderByPrice() {
-        return productRepository.findAll(Sort.by(Sort.Direction.ASC, "price"));
+    public List<Product> getProductsOrderByPriceAsc() {
+        return productRepository.findAllByOrderByPriceAsc();
+    }
+
+    @Override
+    public List<Product> getProductsOrderByPriceDesc() {
+        return productRepository.findAllByOrderByPriceDesc();
     }
 }
