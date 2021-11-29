@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
-import 'package:flutterapp/Modules/event.dart';
+import 'package:flutterapp/Models/product.dart';
 
 class EventContainer extends StatelessWidget {
-  final Event event;
+  final Product event;
   const EventContainer({Key? key, required this.event}) : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class EventContainer extends StatelessWidget {
           ),
         ),
         Text(
-          event.date,
+          event.price.toString() + " \$",
           style: const TextStyle(
             color: Colors.black,
           ),

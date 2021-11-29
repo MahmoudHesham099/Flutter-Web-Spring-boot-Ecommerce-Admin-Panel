@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutterapp/Provider/event_provider.dart';
+import 'package:flutterapp/Providers/product_provider.dart';
 import 'package:flutterapp/Widgets/add_product_drawer.dart';
-import 'package:flutterapp/Widgets/event_container.dart';
+import 'package:flutterapp/Widgets/product_container.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_grid/responsive_grid.dart';
 
@@ -48,7 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     primary: const Color(0xff5b3bfe),
                   ),
                   onPressed: () {
-                    context.read<EventProvider>().setEventToEdit(null);
+                    context.read<ProductProvider>().setProductToEdit(null);
                     _scaffoldKey.currentState!.openEndDrawer();
                   },
                   child: Row(
@@ -86,12 +86,12 @@ class _HomeScreenState extends State<HomeScreen> {
             child: ResponsiveGridList(
                 desiredItemWidth: 200,
                 minSpacing: 20,
-                children: Provider.of<EventProvider>(context)
-                    .getAllEvents()
+                children: Provider.of<ProductProvider>(context)
+                    .getAllProducts()
                     .map<Widget>((event) {
                   return GestureDetector(
                       onTap: () {
-                        context.read<EventProvider>().setEventToEdit(event);
+                        context.read<ProductProvider>().setProductToEdit(event);
                         _scaffoldKey.currentState!.openEndDrawer();
                       },
                       child: EventContainer(event: event));

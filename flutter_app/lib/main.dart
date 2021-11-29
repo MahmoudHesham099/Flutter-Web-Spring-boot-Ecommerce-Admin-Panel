@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutterapp/Provider/event_provider.dart';
 import 'package:provider/provider.dart';
 
-import 'Screens/home_screen.dart';
+import 'Providers/product_provider.dart';
+import 'Screens/products_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,8 +13,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<EventProvider>(
-      create: (context) => EventProvider(),
+    return ChangeNotifierProvider<ProductProvider>(
+      create: (context) => ProductProvider(),
       child: const MaterialApp(
         debugShowCheckedModeBanner: false,
         home: HomeScreen(),
