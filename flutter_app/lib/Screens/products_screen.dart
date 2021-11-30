@@ -19,7 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     Future.delayed(Duration.zero, () {
-      context.read<ProductProvider>().getProducts();
+      Provider.of<ProductProvider>(context, listen: false).getProducts();
     });
   }
 
@@ -56,7 +56,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     primary: const Color(0xff5b3bfe),
                   ),
                   onPressed: () {
-                    context.read<ProductProvider>().productToEdit = null;
+                    Provider.of<ProductProvider>(context, listen: false)
+                        .productToEdit = null;
                     _scaffoldKey.currentState!.openEndDrawer();
                   },
                   child: Row(
@@ -99,7 +100,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     .map<Widget>((product) {
                   return GestureDetector(
                     onTap: () {
-                      context.read<ProductProvider>().productToEdit = product;
+                      Provider.of<ProductProvider>(context, listen: false)
+                          .productToEdit = product;
                       _scaffoldKey.currentState!.openEndDrawer();
                     },
                     child: ProductContainer(product: product),

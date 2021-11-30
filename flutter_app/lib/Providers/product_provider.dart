@@ -11,11 +11,13 @@ class ProductProvider extends ChangeNotifier {
   addProduct(Product product) async {
     Product savedProduct = await _productRepository.addProduct(product);
     products.add(savedProduct);
+    notifyListeners();
   }
 
   getProducts() async {
     List<Product> pageProducts = await _productRepository.getProductsList(page);
     products = products + pageProducts;
     page++;
+    notifyListeners();
   }
 }

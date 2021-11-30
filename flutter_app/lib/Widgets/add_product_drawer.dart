@@ -15,11 +15,15 @@ class AddProductDrawer extends StatefulWidget {
 class _AddProductDrawerState extends State<AddProductDrawer> {
   late final Product _newProduct = Product.empty();
   Product? _editProduct;
-//  @override
-//  void initState() {
-//    super.initState();
-//    _editProduct = context.read<ProductProvider>().getProductToEdit();
-//  }
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration.zero, () {
+      _editProduct =
+          Provider.of<ProductProvider>(context, listen: false).productToEdit;
+      setState(() {});
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +83,8 @@ class _AddProductDrawerState extends State<AddProductDrawer> {
               style: ElevatedButton.styleFrom(primary: const Color(0xff5b3bfe)),
               onPressed: () {
                 if (_editProduct == null) {
-                  context.read<ProductProvider>().addProduct(_newProduct);
+                  Provider.of<ProductProvider>(context, listen: false)
+                      .addProduct(_newProduct);
                 }
               },
               child: Row(
