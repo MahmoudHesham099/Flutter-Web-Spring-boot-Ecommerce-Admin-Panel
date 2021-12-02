@@ -2,10 +2,9 @@ package com.example.springApp.Services;
 
 import com.example.springApp.Entities.Product;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 
 public interface ProductService {
-
-    Page<Product> getProductsList(int page);
 
     Product addProduct(Product product);
 
@@ -13,11 +12,6 @@ public interface ProductService {
 
     void deleteProduct(Long id);
 
-    Page<Product> findProductsByName(String name, int page);
-
-    Page<Product> getProductsOrderByPriceAsc(int page);
-
-    Page<Product> getProductsOrderByPriceDesc(int page);
-
+    Page<Product> getRequestFilters(int page,int limit,String productName,Sort.Direction sortType);
 
 }

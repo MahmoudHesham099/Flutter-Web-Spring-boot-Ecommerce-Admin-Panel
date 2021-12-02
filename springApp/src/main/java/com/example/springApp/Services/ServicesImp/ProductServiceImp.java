@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,12 +17,6 @@ public class ProductServiceImp implements ProductService {
 
     @Autowired
     private ProductRepository productRepository;
-
-    @Override
-    public Page<Product> getProductsList(int page) {
-        Pageable pageable = PageRequest.of(page, 3);
-        return productRepository.findAll(pageable);
-    }
 
     @Override
     public Product addProduct(Product product) {
@@ -43,20 +38,45 @@ public class ProductServiceImp implements ProductService {
     }
 
     @Override
-    public Page<Product> findProductsByName(String name, int page) {
-        Pageable pageable = PageRequest.of(page, 3);
-        return productRepository.findByNameContainingIgnoreCase(name, pageable);
+    public Page<Product> getRequestFilters(int page,int limit,String productName, Sort.Direction sortType) {
+        Page<Product> productPage = null;
+        if(productName==null && sortType==null){
+            productPage = getProductsList(page,limit);
+        }
+        if(productName!=null && sortType==null ){
+            productPage = findProductsByName(page,limit,productName);
+        }
+        if(productName==null && sortType != null ){
+            productPage = getProductsOrderByPrice(page,limit,sortType);
+        }
+        if(productName!=null && sortType!=null){
+            productPage = findProductsByNameAndOrderByPrice(page,limit,productName,sortType);
+        }
+        return  productPage;
     }
 
-    @Override
-    public Page<Product> getProductsOrderByPriceAsc(int page) {
-        Pageable pageable = PageRequest.of(page, 3);
-        return productRepository.findAllByOrderByPriceAsc(pageable);
+    private Page<Product> getProductsList(int page, int limit) {
+        Pageable pageable = PageRequest.of(page, limit);
+        return productRepository.findAll(pageable);
     }
 
-    @Override
-    public Page<Product> getProductsOrderByPriceDesc(int page) {
-        Pageable pageable = PageRequest.of(page, 3);
-        return productRepository.findAllByOrderByPriceDesc(pageable);
+    private Page<Product> findProductsByName(int page,int limit,String productName) {
+        Pageable pageable = PageRequest.of(page, limit);
+        return productRepository.findByNameContainingIgnoreCase(productName, pageable);
+    }
+
+
+    private Page<Product> getProductsOrderByPrice(int page, int limit,Sort.Direction sortType) {
+        Sort sort = Sort.by(sortType, "price");
+        Pageable pageable = PageRequest.of(page, limit,sort);
+        return productRepository.findAll(pageable);
+    }
+
+    private Page<Product> findProductsByNameAndOrderByPrice(int page, int limit,
+                                                           String productName,
+                                                           Sort.Direction sortType) {
+        Sort sort = Sort.by(sortType, "price");
+        Pageable pageable = PageRequest.of(page, limit,sort);
+        return productRepository.findByNameContainingIgnoreCase(productName,pageable);
     }
 }

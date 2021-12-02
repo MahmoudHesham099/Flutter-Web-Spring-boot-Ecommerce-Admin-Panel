@@ -6,6 +6,7 @@ import com.example.springApp.Services.ProductService;
 import com.example.springApp.Handlers.ResponseHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,9 +24,12 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping
-    public ResponseEntity<Object> getProducts(@RequestParam int page){
+    public ResponseEntity<Object> getProducts(@RequestParam(required = false,defaultValue = "0") int page,
+                                              @RequestParam(required = false,defaultValue = "5") int limit,
+                                              @RequestParam(required = false)  String productName,
+                                              @RequestParam(required = false) Sort.Direction sortType){
         try {
-          Page<Product> productPage = productService.getProductsList(page);
+            Page<Product> productPage = productService.getRequestFilters(page,limit,productName,sortType);
           return ResponseHandler.handleResponse("Successfully get products",HttpStatus.OK,productPage);
         }catch (Exception e){
             return ResponseHandler.handleResponse("ERROR",HttpStatus.BAD_REQUEST,e.getMessage());
@@ -66,30 +70,4 @@ public class ProductController {
         }
     }
 
-    @GetMapping("/find")
-    public ResponseEntity<Object> findProducts(@RequestParam int page,@RequestParam String name){
-        try {
-            Page<Product> products = productService.findProductsByName(name, page);
-            return ResponseHandler.handleResponse("Successfully find products", HttpStatus.OK,products);
-        }catch (Exception e){
-            return ResponseHandler.handleResponse("ERROR", HttpStatus.BAD_REQUEST,e.getMessage());
-        }
-    }
-
-    @GetMapping("/sort/price")
-    public ResponseEntity<Object> sortProductsByPrice(@RequestParam int page,@RequestParam String type){
-        try {
-            Page<Product> products;
-            if(Objects.equals(type, "asc")){
-                products = productService.getProductsOrderByPriceAsc(page);
-            }else if (Objects.equals(type, "desc")){
-                products = productService.getProductsOrderByPriceDesc(page);
-            }else{
-                return ResponseHandler.handleResponse("Wrong Type Parameter", HttpStatus.BAD_REQUEST,null);
-            }
-            return ResponseHandler.handleResponse("Successfully sort products", HttpStatus.OK,products);
-        }catch (Exception e){
-            return ResponseHandler.handleResponse("ERROR", HttpStatus.BAD_REQUEST,e.getMessage());
-        }
-    }
 }
