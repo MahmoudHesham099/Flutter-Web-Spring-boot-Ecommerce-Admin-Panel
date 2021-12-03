@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutterapp/Common/constants.dart';
 import 'package:flutterapp/Providers/product_provider.dart';
 import 'package:flutterapp/Views/Widgets/add_product_drawer.dart';
 import 'package:flutterapp/Views/Widgets/elev_button.dart';
@@ -15,12 +16,16 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  List<String> sortBy = ['Price Ascending', 'Price Descending', 'none'];
+  SortTypes? sortType;
+  String? sortValue;
+  String? searchValue;
 
   @override
   void initState() {
     super.initState();
     Future.delayed(Duration.zero, () {
-      Provider.of<ProductProvider>(context, listen: false).getProducts();
+      Provider.of<ProductProvider>(context, listen: false).getProducts(0);
     });
   }
 
@@ -30,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
       backgroundColor: Colors.white,
       key: _scaffoldKey,
       appBar: AppBar(
-        backgroundColor: const Color(0xff5b3bfe),
+        backgroundColor: APP_COLOR,
         title: const Text(
           'Ecommerce Admin Panel 🚀',
           style: TextStyle(fontWeight: FontWeight.w700),
@@ -66,19 +71,60 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           const SizedBox(height: 20),
           Padding(
-            padding: const EdgeInsets.only(left: 20),
-            child: SizedBox(
-              width: 400,
-              child: TextField(
-//                    controller: _searchController,
-                decoration: const InputDecoration(
-                  contentPadding: EdgeInsets.symmetric(vertical: 15),
-                  hintText: 'search products by name...',
-                  border: InputBorder.none,
-                  prefixIcon: Icon(Icons.search),
+            padding: const EdgeInsets.only(right: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                SizedBox(
+                  width: 180,
+                  child: TextField(
+                    decoration: const InputDecoration(
+                      contentPadding: EdgeInsets.symmetric(vertical: 15),
+                      hintText: 'search by name...',
+                      border: InputBorder.none,
+                      prefixIcon: Icon(Icons.search),
+                    ),
+                    onChanged: (input) {
+                      searchValue = input;
+                    },
+                  ),
                 ),
-                onChanged: (input) {},
-              ),
+                const SizedBox(width: 10),
+                SizedBox(
+                  width: 150,
+                  child: DropdownButton(
+                    hint: const Text("Sort By"),
+                    value: sortValue,
+                    items: sortBy.map((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      sortValue = value as String?;
+                      if (value == sortBy[0]) {
+                        sortType = SortTypes.ASC;
+                      } else if (value == sortBy[1]) {
+                        sortType = SortTypes.DESC;
+                      } else {
+                        sortType = null;
+                      }
+                      setState(() {});
+                    },
+                  ),
+                ),
+                const SizedBox(width: 10),
+                ElevButton(
+                  text: "Filter",
+                  icon: Icons.filter_list,
+                  color: Colors.black,
+                  onPressed: () {
+                    Provider.of<ProductProvider>(context, listen: false)
+                        .filterProducts(0, searchValue, sortType);
+                  },
+                )
+              ],
             ),
           ),
           const SizedBox(height: 30),

@@ -1,11 +1,18 @@
+import 'package:flutter/material.dart';
+import 'package:flutterapp/Common/constants.dart';
 import 'package:flutterapp/Models/product.dart';
 import 'package:flutterapp/Services/api_service.dart';
 
 class ProductRepository {
   final APIService _apiService = APIService();
 
-  Future<List<Product>> getProductsList(int page) async {
+  Future<List<Product>> getProductsList(
+      int page, String? searchValue, SortTypes? sortType) async {
     Map<String, String> params = {"page": page.toString(), "limit": "10"};
+    if (searchValue != null) params["productName"] = searchValue;
+    if (sortType != null) {
+      params["sortType"] = sortType.toString().split('.').last;
+    }
     dynamic response = await _apiService.get("/products", params);
     final jsonData = response['data']['content'] as List;
     List<Product> productsList =

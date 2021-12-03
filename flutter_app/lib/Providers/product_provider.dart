@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutterapp/Common/constants.dart';
 import 'package:flutterapp/Models/product.dart';
 import 'package:flutterapp/Repositories/product_repository.dart';
 
@@ -6,13 +7,22 @@ class ProductProvider extends ChangeNotifier {
   List<Product> products = [];
   Product? productToEdit;
   final ProductRepository _productRepository = ProductRepository();
-  static int page = 0;
 
-  getProducts() async {
-    List<Product> pageProducts = await _productRepository.getProductsList(page);
+  getProducts(int page) async {
+    List<Product> pageProducts =
+        await _productRepository.getProductsList(page, null, null);
     products = products + pageProducts;
-    page++;
     notifyListeners();
+  }
+
+  filterProducts(int page, String? searchValue, SortTypes? sortType) async {
+    bool bothNull = searchValue == null && sortType == null;
+    if (!bothNull) {
+      List<Product> pageProducts =
+          await _productRepository.getProductsList(page, searchValue, sortType);
+      products = pageProducts;
+      notifyListeners();
+    }
   }
 
   addProduct(Product product) async {

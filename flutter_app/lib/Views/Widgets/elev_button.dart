@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutterapp/Common/constants.dart';
 
 class ElevButton extends StatelessWidget {
   final String text;
@@ -16,8 +17,7 @@ class ElevButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      style:
-          ElevatedButton.styleFrom(primary: color ?? const Color(0xff5b3bfe)),
+      style: ElevatedButton.styleFrom(primary: color ?? APP_COLOR),
       onPressed: () {
         onPressed();
       },

@@ -10,7 +10,7 @@ class APIService {
     "accept": "application/json",
   };
 
-  Future<dynamic> get(String url, Map<String, dynamic> params) async {
+  Future<dynamic> get(String url, Map<String, String> params) async {
     try {
       dynamic responseJson;
       Uri uri = Uri.parse(_baseUrl + url).replace(queryParameters: params);
