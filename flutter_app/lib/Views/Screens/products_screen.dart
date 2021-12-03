@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutterapp/Providers/product_provider.dart';
-import 'package:flutterapp/Widgets/add_product_drawer.dart';
-import 'package:flutterapp/Widgets/product_container.dart';
+import 'package:flutterapp/Views/Widgets/add_product_drawer.dart';
+import 'package:flutterapp/Views/Widgets/elev_button.dart';
+import 'package:flutterapp/Views/Widgets/product_container.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_grid/responsive_grid.dart';
 
@@ -31,7 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         backgroundColor: const Color(0xff5b3bfe),
         title: const Text(
-          'Ecommerce Admin Panel',
+          'Ecommerce Admin Panel 🚀',
           style: TextStyle(fontWeight: FontWeight.w700),
         ),
         centerTitle: true,
@@ -48,28 +49,18 @@ class _HomeScreenState extends State<HomeScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
-                  'Products',
+                  'Products 💰',
                   style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                 ),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    primary: const Color(0xff5b3bfe),
-                  ),
+                ElevButton(
+                  text: 'Add Product',
+                  icon: Icons.add,
                   onPressed: () {
                     Provider.of<ProductProvider>(context, listen: false)
                         .productToEdit = null;
                     _scaffoldKey.currentState!.openEndDrawer();
                   },
-                  child: Row(
-                    children: const [
-                      Icon(Icons.add),
-                      SizedBox(
-                        width: 10.0,
-                      ),
-                      Text('Add Product'),
-                    ],
-                  ),
-                )
+                ),
               ],
             ),
           ),

@@ -34,4 +34,13 @@ class Product {
       "price": product.price,
     };
   }
+
+  @override
+  String toString() {
+    return 'Product{id: $id,'
+        ' name: $name,'
+        ' description: $description,'
+        ' image: $image,'
+        ' price: $price}';
+  }
 }

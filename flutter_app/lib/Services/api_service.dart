@@ -37,6 +37,30 @@ class APIService {
     }
   }
 
+  Future<dynamic> put(String url, Map<String, dynamic> body) async {
+    try {
+      dynamic responseJson;
+      Uri uri = Uri.parse(_baseUrl + url);
+      String bodyString = json.encode(body);
+      http.Response response =
+          await http.put(uri, headers: headers, body: bodyString);
+      responseJson = returnResponse(response);
+      return responseJson;
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<dynamic> delete(String url) async {
+    try {
+      Uri uri = Uri.parse(_baseUrl + url);
+      http.Response response = await http.delete(uri, headers: headers);
+      return response;
+    } catch (e) {
+      print(e);
+    }
+  }
+
   @visibleForTesting
   dynamic returnResponse(http.Response response) {
     switch (response.statusCode) {
