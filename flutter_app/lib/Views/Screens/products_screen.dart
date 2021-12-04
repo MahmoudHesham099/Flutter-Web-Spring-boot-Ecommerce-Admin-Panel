@@ -20,12 +20,17 @@ class _HomeScreenState extends State<HomeScreen> {
   SortTypes? sortType;
   String? sortValue;
   String? searchValue;
+  int pagesNum = 0;
+  int nextPage = 1;
 
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration.zero, () {
-      Provider.of<ProductProvider>(context, listen: false).getProducts(0);
+    Future.delayed(Duration.zero, () async {
+      await Provider.of<ProductProvider>(context, listen: false)
+          .getProducts(0, null, null, "paging");
+      pagesNum =
+          Provider.of<ProductProvider>(context, listen: false).pagesNumber;
     });
   }
 
@@ -119,9 +124,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   text: "Filter",
                   icon: Icons.filter_list,
                   color: Colors.black,
-                  onPressed: () {
-                    Provider.of<ProductProvider>(context, listen: false)
-                        .filterProducts(0, searchValue, sortType);
+                  onPressed: () async {
+                    await Provider.of<ProductProvider>(context, listen: false)
+                        .getProducts(0, searchValue, sortType, "filter");
+                    pagesNum =
+                        Provider.of<ProductProvider>(context, listen: false)
+                            .pagesNumber;
+                    nextPage = 1;
+                    setState(() {});
                   },
                 )
               ],
@@ -145,6 +155,23 @@ class _HomeScreenState extends State<HomeScreen> {
                   );
                 }).toList()),
           ),
+          const SizedBox(height: 30),
+          pagesNum > 1
+              ? SizedBox(
+                  width: 300,
+                  child: ElevButton(
+                    text: 'Load More',
+                    icon: Icons.add,
+                    onPressed: () {
+                      Provider.of<ProductProvider>(context, listen: false)
+                          .getProducts(
+                              nextPage, searchValue, sortType, "paging");
+                      pagesNum--;
+                      nextPage++;
+                    },
+                  ),
+                )
+              : const SizedBox(),
         ],
       ),
     );

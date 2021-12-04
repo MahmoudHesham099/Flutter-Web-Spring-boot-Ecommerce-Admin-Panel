@@ -6,23 +6,22 @@ import 'package:flutterapp/Repositories/product_repository.dart';
 class ProductProvider extends ChangeNotifier {
   List<Product> products = [];
   Product? productToEdit;
+  int pagesNumber = 0;
+
   final ProductRepository _productRepository = ProductRepository();
 
-  getProducts(int page) async {
-    List<Product> pageProducts =
-        await _productRepository.getProductsList(page, null, null);
-    products = products + pageProducts;
-    notifyListeners();
-  }
-
-  filterProducts(int page, String? searchValue, SortTypes? sortType) async {
-    bool bothNull = searchValue == null && sortType == null;
-    if (!bothNull) {
-      List<Product> pageProducts =
-          await _productRepository.getProductsList(page, searchValue, sortType);
+  getProducts(int page, String? searchValue, SortTypes? sortType,
+      String pagingOrFilter) async {
+    Map<String, dynamic> returnedData =
+        await _productRepository.getProductsList(page, searchValue, sortType);
+    List<Product> pageProducts = returnedData["products list"];
+    pagesNumber = returnedData["pages number"];
+    if (pagingOrFilter == "paging") {
+      products = products + pageProducts;
+    } else if (pagingOrFilter == "filter") {
       products = pageProducts;
-      notifyListeners();
     }
+    notifyListeners();
   }
 
   addProduct(Product product) async {
