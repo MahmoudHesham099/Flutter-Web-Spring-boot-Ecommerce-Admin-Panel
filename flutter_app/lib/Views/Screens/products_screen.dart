@@ -28,7 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     Future.delayed(Duration.zero, () async {
       await Provider.of<ProductProvider>(context, listen: false)
-          .getProducts(0, null, null, "paging");
+          .getProducts(0, null, null, GetTypes.PAGING);
       pagesNum =
           Provider.of<ProductProvider>(context, listen: false).pagesNumber;
     });
@@ -126,7 +126,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   color: Colors.black,
                   onPressed: () async {
                     await Provider.of<ProductProvider>(context, listen: false)
-                        .getProducts(0, searchValue, sortType, "filter");
+                        .getProducts(0, searchValue, sortType, GetTypes.FILTER);
                     pagesNum =
                         Provider.of<ProductProvider>(context, listen: false)
                             .pagesNumber;
@@ -140,38 +140,47 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(height: 30),
           Expanded(
             child: ResponsiveGridList(
-                desiredItemWidth: 200,
-                minSpacing: 20,
-                children: Provider.of<ProductProvider>(context)
-                    .products
-                    .map<Widget>((product) {
-                  return GestureDetector(
-                    onTap: () {
-                      Provider.of<ProductProvider>(context, listen: false)
-                          .productToEdit = product;
-                      _scaffoldKey.currentState!.openEndDrawer();
-                    },
-                    child: ProductContainer(product: product),
-                  );
-                }).toList()),
+              desiredItemWidth: 200,
+              minSpacing: 20,
+              children: Provider.of<ProductProvider>(context)
+                  .products
+                  .map<Widget>((product) {
+                return GestureDetector(
+                  onTap: () {
+                    Provider.of<ProductProvider>(context, listen: false)
+                        .productToEdit = product;
+                    _scaffoldKey.currentState!.openEndDrawer();
+                  },
+                  child: ProductContainer(product: product),
+                );
+              }).toList()
+                ..add(
+                  pagesNum > 1
+                      ? Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            SizedBox(
+                              height: 210,
+                              child: ElevButton(
+                                text: 'Load More',
+                                icon: Icons.add,
+                                color: Colors.grey,
+                                onPressed: () {
+                                  Provider.of<ProductProvider>(context,
+                                          listen: false)
+                                      .getProducts(nextPage, searchValue,
+                                          sortType, GetTypes.PAGING);
+                                  pagesNum--;
+                                  nextPage++;
+                                },
+                              ),
+                            ),
+                          ],
+                        )
+                      : const SizedBox(),
+                ),
+            ),
           ),
-          const SizedBox(height: 30),
-          pagesNum > 1
-              ? SizedBox(
-                  width: 300,
-                  child: ElevButton(
-                    text: 'Load More',
-                    icon: Icons.add,
-                    onPressed: () {
-                      Provider.of<ProductProvider>(context, listen: false)
-                          .getProducts(
-                              nextPage, searchValue, sortType, "paging");
-                      pagesNum--;
-                      nextPage++;
-                    },
-                  ),
-                )
-              : const SizedBox(),
         ],
       ),
     );
